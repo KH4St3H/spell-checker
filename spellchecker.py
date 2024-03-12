@@ -10,6 +10,9 @@ class SpellChecker:
         elif algorithm == 'edit_distance_recursive':
             self.get_score = self.edit_distance_recursive
 
+        elif algorithm == 'edit_distance_dp':
+            self.get_score = self.edit_distance_dp
+
 
     def edit_distance(self, word1: str, word2: str,
                       a=-1, b=-1, memory: List[List[int]]=[]) -> int:
@@ -68,4 +71,22 @@ class SpellChecker:
 
         return 1 + best_case
 
-    
+    def edit_distance_dp(self, word1, word2):
+        a = len(word1)
+        b = len(word2)
+
+        dp = [[0 for _ in range(b+1)] for _ in range(a+1)]
+        
+        for i in range(a+1):
+            for j in range(b+1):
+                if i == 0 or j == 0:
+                    dp[i][j] = max(i, j)
+                    continue
+
+                if word1[i-1] == word2[j-1]:
+                    dp[i][j] = dp[i-1][j-1]
+                else:
+                    dp[i][j] = 1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]) 
+
+        return dp[a][b]
+

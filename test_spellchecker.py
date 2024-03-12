@@ -52,6 +52,13 @@ class TestEditDistanceRecursive(TestEditDistance):
         self.spellchecker = SpellChecker('edit_distance_recursive')
 
 
+class TestEditDistanceDP(TestEditDistance):
+    def __init__(self, methodName: str = "runTest") -> None:
+        super().__init__(methodName)
+        self.spellchecker = SpellChecker('edit_distance_dp')
+
+
+
 if __name__ == '__main__':
     unittest.main()
 

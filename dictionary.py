@@ -13,7 +13,7 @@ class Node:
 
         return False
 
-    def addsub(self, word, level=1) -> None:
+    def addsub(self, word, level=0) -> None:
         if level == len(word): 
             self.word = word
             return
@@ -24,7 +24,7 @@ class Node:
 
         self.subs[letter].addsub(word, level+1)
 
-    def find_word(self, word, level=1):
+    def find_word(self, word, level=0):
         if level == len(word):
             return word == self.word
 
@@ -44,18 +44,14 @@ class Node:
 
 class Dictionary:
     def __init__(self) -> None:
-        self.starting_nodes = {}
+        self.starting_node = Node('')
         pass
 
     def add_word(self, new_word):
-        letter = new_word[0] 
-        if letter in self.starting_nodes:
-            self.starting_nodes[letter].addsub(new_word)
-        else:
-            self.starting_nodes[letter] = Node(letter)
+        self.starting_node.addsub(new_word)
 
     def find_word(self, word):
-        return self.starting_nodes[word[0]].find_word(word)
+        return self.starting_node.find_word(word)
 
     def add_from_file(self, path):
         logging.info(f'Reading words from "{path}"')
@@ -65,10 +61,25 @@ class Dictionary:
                 if d % 1000 == 0:
                     logging.info(f"Read {d} lines from file")
 
+    def iterate_all(self):
+        stack = [self.starting_node]
+        while stack:
+            current_node = stack.pop()
+            if current_node.word:
+                yield current_node.word
+            for node in current_node.subs.values():
+                if node.subs:
+                    stack.append(node)
+                elif node.word:
+                    yield node.word
 
 if __name__ == '__main__':
     dct = Dictionary()
     dct.add_from_file('dictionaries/english.txt')
 
     print(dct.find_word('hello'))
+    print(dct.find_word('hell'))
+    print(dct.find_word('hero'))
+    print(dct.find_word('helo'))
+    print(dct.find_word('simpsonss'))
 

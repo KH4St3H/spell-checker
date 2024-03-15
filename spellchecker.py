@@ -1,8 +1,12 @@
 from typing import List
+from dictionary import Dictionary
+from string import ascii_lowercase
+
+import operator
 
 
 class SpellChecker:
-    def __init__(self, algorithm='edit_distance') -> None:
+    def __init__(self, algorithm='edit_distance', dictionary: Dictionary | None = None) -> None:
 
         if algorithm == 'edit_distance':
             self.get_score = self.edit_distance
@@ -12,6 +16,9 @@ class SpellChecker:
 
         elif algorithm == 'edit_distance_dp':
             self.get_score = self.edit_distance_dp
+
+        if dictionary:
+            self.dictionary = dictionary
 
 
     def edit_distance(self, word1: str, word2: str,
@@ -89,4 +96,19 @@ class SpellChecker:
                     dp[i][j] = 1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]) 
 
         return dp[a][b]
+
+    @staticmethod
+    def find_top(dct: dict[str, int], n=10) -> List[tuple]:
+        '''
+        Takes a dictionary and returns n items with biggest values
+        '''
+        sorted_list = sorted(dct.items(), key=operator.itemgetter(1))
+        return sorted_list[:n]
+
+    def brute_force(self, word: str):
+        distances = {}
+        for w in self.dictionary.iterate_all():
+            distances[w] = self.get_score(word, w)
+
+        return distances
 

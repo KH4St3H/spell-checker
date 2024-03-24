@@ -14,7 +14,7 @@ class Node:
         return False
 
     def addsub(self, word, level=0) -> None:
-        if level == len(word): 
+        if level == len(word):
             self.word = word
             return
 
@@ -22,7 +22,7 @@ class Node:
         if letter not in self.subs:
             self.subs[letter] = Node(letter)
 
-        self.subs[letter].addsub(word, level+1)
+        self.subs[letter].addsub(word, level + 1)
 
     def find_word(self, word, level=0):
         if level == len(word):
@@ -30,10 +30,9 @@ class Node:
 
         letter = word[level]
         if letter in self.subs:
-            return self.subs[letter].find_word(word, level+1)
-        
-        return False
+            return self.subs[letter].find_word(word, level + 1)
 
+        return False
 
     def __str__(self) -> str:
         return self.word if self.word else self.letter
@@ -73,6 +72,7 @@ class Dictionary:
                 elif node.word:
                     yield node.word
 
+
 if __name__ == '__main__':
     dct = Dictionary()
     dct.add_from_file('dictionaries/english.txt')
@@ -82,4 +82,3 @@ if __name__ == '__main__':
     print(dct.find_word('hero'))
     print(dct.find_word('helo'))
     print(dct.find_word('simpsonss'))
-

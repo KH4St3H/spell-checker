@@ -118,7 +118,8 @@ class SpellChecker:
 
         return distances
 
-    def slice_n_check(self, word: str):
+    def slice_n_check(self, word: str, edit_distance_limit=1, depth=1, blacklist: set = set()):
+        blacklist.add(word)
         length = len(word)
         slices = [[word[:i], word[i:]] for i in range(length)]
 
@@ -126,11 +127,31 @@ class SpellChecker:
         deletions = {word[:i] + word[i + 1:] for i in range(length)}
         replaces = {word[:i] + c + word[i + 1:] for i in range(length) for c in ascii_lowercase}
 
-        print(len(insertions.union(deletions).union(replaces)))
         distances = {}
         for w in insertions.union(deletions).union(replaces):
+            if w in blacklist:
+                continue
             if not self.dictionary.find_word(w):
                 continue
-            distances[w] = 1  # we know cause we made it 1
+
+            distances[w] = depth
+
+        if edit_distance_limit == depth:
+            return distances
+
+        for word in distances:
+            # we add currently seen words in a blacklist because later recursions
+            # of this functions will have a higher edit_distance and will cause
+            # unnecessary iterations
+            tmp = self.slice_n_check(
+                word,
+                edit_distance_limit,
+                depth + 1,
+                set(distances.keys()).union(blacklist)
+            )
+            tmp.update(distances)
+            distances = tmp
+            # we update the the new dict with older dict so we always have
+            # the lowest edit_distance
 
         return distances

@@ -81,13 +81,15 @@ class TestEditDistanceSplit(BaseTestCase):
             self.score_check((original_word, word), 1)
 
     def test_edit_distance_2(self):
+        """
+        find words with edit_distance <= 2
+        """
         original_word = 'prooress'
-        for word, edit_distance in self.spellchecker.slice_n_check(original_word).items():
+        for word, edit_distance in self.spellchecker.slice_n_check(original_word, 2).items():
             self.score_check((original_word, word), edit_distance)
 
         original_word = 'assent'
-        for word, edit_distance in self.spellchecker.slice_n_check(original_word).items():
-            print(word, edit_distance)
+        for word, edit_distance in self.spellchecker.slice_n_check(original_word, 2).items():
             self.score_check((original_word, word), edit_distance)
 
 

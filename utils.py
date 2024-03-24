@@ -6,6 +6,6 @@ def benchmark(func):
         t = time.time()
         response = func(*args, **kwargs)
         t = time.time() - t
-        return (t, response)
+        return (t*1000, response)
 
     return wrapper

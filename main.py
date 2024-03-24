@@ -15,7 +15,17 @@ def suggest(word):
     top = sc.find_top(distances, 10)
     return top
 
+
+@benchmark
+def fast(word):
+    distances = sc.slice_n_check(word)
+    return list(distances.items())[:10]
+
+
 if __name__ == '__main__':
     t, top = suggest('hallow')
-    print(f'took {t:.2f}s')
+    print(f'took {t:.2f}ms')
+    print(top)
+    t, top = fast('hallow')
+    print(f'took {t:.2f}ms')
     print(top)

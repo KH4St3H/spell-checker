@@ -26,6 +26,9 @@ class SpellChecker:
 
     def edit_distance(self, word1: str, word2: str,
                       a=-1, b=-1, memory: List[List[int]] = []) -> int:
+        '''
+        Returns edit distance between word1 and word2 using Recursion and memoization
+        '''
         if a == -1:
             a = len(word1)
         if b == -1:
@@ -64,6 +67,9 @@ class SpellChecker:
 
     def edit_distance_recursive(self, word1: str, word2: str,
                                 a=-1, b=-1) -> int:
+        '''
+        Returns edit distance between word1 and word2 using pure recursion
+        '''
         if a == -1:
             a = len(word1)
         if b == -1:
@@ -85,6 +91,9 @@ class SpellChecker:
         return 1 + best_case
 
     def edit_distance_dp(self, word1, word2):
+        '''
+        Returns edit distance between word1 and word2 using dynamic programming
+        '''
         a = len(word1)
         b = len(word2)
 
@@ -111,14 +120,20 @@ class SpellChecker:
         sorted_list = sorted(dct.items(), key=operator.itemgetter(1))
         return sorted_list[:n]
 
-    def brute_force(self, word: str):
+    def brute_force(self, word: str) -> dict[str, int]:
+        """
+        Returns a dict of edit distances of word from all dictionary words
+        """
         distances = {}
         for w in self.dictionary.iterate_all():
             distances[w] = self.get_score(word, w)
 
         return distances
 
-    def slice_n_check(self, word: str, edit_distance_limit=1, depth=1, blacklist: set = set()):
+    def slice_n_check(self, word: str, edit_distance_limit=1, depth=1, blacklist: set = set()) -> dict[str, int]:
+        """
+        Returns a dictionary of words with edit distance from origial word < edit_distance_limit
+        """
         blacklist.add(word)
         length = len(word)
         slices = [[word[:i], word[i:]] for i in range(length)]

@@ -1,5 +1,5 @@
 import unittest
-from spellchecker import SpellChecker
+from spell_checker.spellchecker import SpellChecker
 
 
 class BaseTestCase(unittest.TestCase):
